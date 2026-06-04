@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>The Upstaging — Access Control</title>
+<link rel="manifest" href="/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black:   #0a0a0a;
+  --dark:    #111111;
+  --card:    #181818;
+  --border:  #2a2a2a;
+  --orange:  #f97316;
+  --orange2: #ea580c;
+  --yellow:  #fbbf24;
+  --white:   #f5f0e8;
+  --dim:     #666;
+  --green:   #22c55e;
+  --red:     #ef4444;
+  --amber:   #f59e0b;
+  --bebas:   'Bebas Neue', sans-serif;
+  --oswald:  'Oswald', sans-serif;
+  --mono:    'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%; height: 100dvh;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--oswald);
+  overflow: hidden;
+}
+
+/* ── SCREENS ── */
+.screen { position: fixed; inset: 0; overflow-y: auto; overflow-x: hidden; display: none; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ═══════════════════════════════════
+   HOME SCREEN
+═══════════════════════════════════ */
+#screen-home {
+  background: var(--black);
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.home-hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Animated orange gradient bg */
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(249,115,22,0.35) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 80% at 30% 80%, rgba(234,88,12,0.2) 0%, transparent 60%),
+    var(--black);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+}
+
+/* Kennyzeeco silhouette using CSS art */
+.hero-figure {
+  position: absolute;
+  bottom: 0; right: -10px;
+  width: 65%;
+  max-width: 280px;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-figure img {
+  width: 100%;
+  display: block;
+  filter: grayscale(100%) contrast(1.2);
+  mix-blend-mode: luminosity;
+  opacity: 0.55;
+}
+/* Fallback silhouette if no image */
+.hero-silhouette {
+  width: 100%; aspect-ratio: 0.6;
+  background: linear-gradient(180deg, rgba(249,115,22,0.3) 0%, rgba(0,0,0,0) 100%);
+  clip-path: polygon(30% 0%, 70% 0%, 85% 15%, 90% 35%, 75% 50%, 80% 65%, 85% 85%, 75% 100%, 25% 100%, 15% 85%, 20% 65%, 25% 50%, 10% 35%, 15% 15%);
+}
+
+.home-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  min-height: 100dvh;
+  padding: 0;
+}
+
+/* Top bar */
+.home-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0;
+}
+.home-logo {
+  font-family: var(--bebas);
+  font-size: 13px; letter-spacing: 4px;
+  color: var(--orange);
+  border: 1px solid var(--orange);
+  padding: 4px 10px;
+}
+.home-date {
+  font-family: var(--mono);
+  font-size: 10px; color: var(--dim);
+  letter-spacing: 2px;
+}
+
+/* Event info */
+.home-event {
+  padding: 28px 20px 0;
+  flex: 1;
+}
+.home-presents {
+  font-family: var(--oswald);
+  font-size: 9px; letter-spacing: 4px;
+  color: var(--orange); opacity: 0.8;
+  margin-bottom: 4px;
+}
+.home-title {
+  font-family: var(--bebas);
+  font-size: clamp(52px, 18vw, 80px);
+  line-height: 0.9;
+  color: var(--white);
+  letter-spacing: 2px;
+}
+.home-title span {
+  color: var(--orange);
+  display: block;
+}
+.home-subtitle {
+  font-family: var(--bebas);
+  font-size: 18px; letter-spacing: 6px;
+  color: var(--yellow);
+  margin-top: 6px;
+}
+.home-venue {
+  font-family: var(--oswald);
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--dim); margin-top: 4px;
+}
+
+/* Divider line */
+.home-divider {
+  width: 60px; height: 2px;
+  background: var(--orange);
+  margin: 20px 20px;
+}
+
+/* Copywriting section */
+.home-copy {
+  padding: 0 20px;
+  max-width: 280px;
+}
+.home-copy-headline {
+  font-family: var(--bebas);
+  font-size: 28px; letter-spacing: 2px;
+  color: var(--white); line-height: 1;
+  margin-bottom: 10px;
+}
+.home-copy-headline span { color: var(--orange); }
+.home-copy-body {
+  font-family: var(--oswald);
+  font-size: 12px; font-weight: 400;
+  color: #888; line-height: 1.7;
+  letter-spacing: 0.5px;
+}
+
+/* Tier badges */
+.tier-strip {
+  display: flex; gap: 6px;
+  padding: 18px 20px 0;
+  flex-wrap: wrap;
+}
+.tier-chip {
+  font-family: var(--mono);
+  font-size: 8px; letter-spacing: 1px;
+  padding: 4px 10px; border-radius: 2px;
+  border: 1px solid;
+}
+.tier-chip.reg  { border-color: #3a3a3a; color: #888; background: rgba(255,255,255,0.03); }
+.tier-chip.vip  { border-color: rgba(251,191,36,0.4); color: var(--yellow); background: rgba(251,191,36,0.06); }
+.tier-chip.ult  { border-color: rgba(249,115,22,0.5); color: var(--orange); background: rgba(249,115,22,0.08); }
+.tier-chip.hof  { border-color: rgba(239,68,68,0.5); color: #f87171; background: rgba(239,68,68,0.08); }
+
+/* CTA Button */
+.home-cta {
+  padding: 24px 20px 40px;
+  margin-top: auto;
+}
+.btn-enter {
+  width: 100%;
+  padding: 18px;
+  background: var(--orange);
+  border: none; border-radius: 3px;
+  font-family: var(--bebas);
+  font-size: 22px; letter-spacing: 4px;
+  color: var(--black);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn-enter::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+.btn-enter:hover::before { transform: translateX(100%); }
+.btn-enter:hover { background: var(--orange2); }
+.btn-enter:active { transform: scale(0.98); }
+
+.btn-enter-sub {
+  display: block; font-family: var(--mono);
+  font-size: 8px; letter-spacing: 3px;
+  color: rgba(0,0,0,0.5); margin-top: 2px;
+}
+
+/* Security badge */
+.security-badge {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.02);
+}
+.security-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.security-text {
+  font-family: var(--mono);
+  font-size: 9px; letter-spacing: 1px; color: var(--dim);
+}
+.security-text strong { color: var(--green); }
+
+/* ═══════════════════════════════════
+   APP SCREEN (after login)
+═══════════════════════════════════ */
+#screen-app {
+  background: var(--black);
+  flex-direction: column;
+}
+
+/* Flash */
+#flash {
+  position: fixed; inset: 0; z-index: 999;
+  pointer-events: none; opacity: 0;
+}
+#flash.show-green { animation: flashGreen 1.3s ease-out forwards; }
+#flash.show-red   { animation: flashRed   1.3s ease-out forwards; }
+#flash.show-amber { animation: flashAmber 1.3s ease-out forwards; }
+@keyframes flashGreen { 0%{opacity:1;background:rgba(34,197,94,0.2)}  100%{opacity:0} }
+@keyframes flashRed   { 0%{opacity:1;background:rgba(239,68,68,0.2)}  100%{opacity:0} }
+@keyframes flashAmber { 0%{opacity:1;background:rgba(245,158,11,0.2)} 100%{opacity:0} }
+
+/* App header */
+.app-header {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.app-header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+}
+.app-brand {
+  display: flex; flex-direction: column;
+}
+.app-brand-name {
+  font-family: var(--bebas);
+  font-size: 18px; letter-spacing: 3px; color: var(--orange);
+  line-height: 1;
+}
+.app-brand-event {
+  font-family: var(--mono);
+  font-size: 8px; color: var(--dim); letter-spacing: 2px;
+}
+.app-stats {
+  display: flex; gap: 14px;
+}
+.app-stat { text-align: center; }
+.app-stat-n { font-family: var(--bebas); font-size: 22px; line-height: 1; }
+.app-stat-l { font-family: var(--mono); font-size: 7px; letter-spacing: 2px; color: var(--dim); }
+.app-stat.s-inside .app-stat-n { color: var(--green); }
+.app-stat.s-scanned .app-stat-n { color: var(--orange); }
+.app-stat.s-fakes .app-stat-n { color: var(--red); }
+
+/* Tabs */
+.app-tabs {
+  display: flex;
+  border-top: 1px solid rgba(249,115,22,0.1);
+}
+.app-tab {
+  flex: 1; padding: 9px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer;
+  color: var(--dim);
+  font-family: var(--mono); font-size: 7px; letter-spacing: 2px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.app-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.app-tab svg { width: 15px; height: 15px; }
+
+/* Content area */
+.app-content {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+}
+.app-content::-webkit-scrollbar { width: 3px; }
+.app-content::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+.pane { display: none; padding: 16px 14px 80px; }
+.pane.active { display: flex; flex-direction: column; gap: 14px; animation: slideUp 0.25s ease; }
+@keyframes slideUp { from{transform:translateY(12px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ── CHECKPOINT PILLS ── */
+.section-label {
+  font-family: var(--mono);
+  font-size: 8px; letter-spacing: 3px; color: var(--dim);
+}
+.checkpoints { display: flex; gap: 6px; flex-wrap: wrap; }
+.cp-pill {
+  padding: 5px 12px; border-radius: 2px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--dim);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.15s;
+}
+.cp-pill.active { border-color: var(--orange); background: rgba(249,115,22,0.1); color: var(--orange); }
+
+/* ── CAMERA BOX ── */
+.camera-box {
+  position: relative; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card); overflow: hidden;
+}
+.cam-placeholder {
+  width: 100%; aspect-ratio: 4/3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+}
+.cam-placeholder.hidden { display: none; }
+.cam-icon-wrap {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(249,115,22,0.1);
+  border: 1px solid rgba(249,115,22,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+}
+.cam-hint { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 2px; }
+
+video.cam-video { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: none; }
+video.cam-video.active { display: block; }
+#capture-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 6px; }
+
+/* Corner brackets */
+.corner { position: absolute; width: 20px; height: 20px; }
+.corner.tl { top: 8px; left: 8px; border-top: 2px solid var(--orange); border-left: 2px solid var(--orange); }
+.corner.tr { top: 8px; right: 8px; border-top: 2px solid var(--orange); border-right: 2px solid var(--orange); }
+.corner.bl { bottom: 8px; left: 8px; border-bottom: 2px solid var(--orange); border-left: 2px solid var(--orange); }
+.corner.br { bottom: 8px; right: 8px; border-bottom: 2px solid var(--orange); border-right: 2px solid var(--orange); }
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  display: none; animation: scanMove 1.2s linear infinite;
+}
+.scan-line.active { display: block; }
+@keyframes scanMove { 0%{top:10%} 100%{top:90%} }
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 8px; }
+.btn {
+  flex: 1; padding: 12px; border-radius: 3px; border: none;
+  font-family: var(--oswald); font-size: 13px; letter-spacing: 2px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.btn-primary { background: var(--orange); color: var(--black); }
+.btn-primary:hover { background: var(--orange2); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { background: #2a2a2a; color: var(--dim); cursor: not-allowed; }
+.btn-outline { background: var(--card); color: var(--dim); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+.btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); flex: 0; padding: 9px 12px; font-size: 10px; }
+
+/* ── INPUT ── */
+.input-label { font-family: var(--mono); font-size: 8px; letter-spacing: 3px; color: var(--dim); margin-bottom: 6px; }
+.input-row { display: flex; gap: 8px; }
+input[type="text"] {
+  flex: 1; padding: 12px 14px; border-radius: 3px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--white); font-family: var(--mono); font-size: 15px; letter-spacing: 4px;
+  transition: border-color 0.2s;
+}
+input[type="text"]:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 2px rgba(249,115,22,0.1); }
+input[type="text"]::placeholder { color: #333; letter-spacing: 2px; font-size: 11px; }
+
+/* ── RESULT CARDS ── */
+.result-card {
+  border-radius: 6px; padding: 16px; border: 1px solid;
+  animation: slideUp 0.2s ease;
+}
+.result-card.r-in    { border-color: rgba(34,197,94,0.35);  background: rgba(10,22,12,0.95); }
+.result-card.r-out   { border-color: rgba(245,158,11,0.35); background: rgba(22,16,5,0.95); }
+.result-card.r-fake  { border-color: rgba(239,68,68,0.35);  background: rgba(22,5,5,0.95); }
+.result-card.r-wait  { border-color: var(--border); background: var(--card); }
+
+.result-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.result-icon {
+  width: 48px; height: 48px; border-radius: 5px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--bebas); font-size: 26px;
+}
+.r-in  .result-icon { background: rgba(34,197,94,0.15);  color: var(--green); }
+.r-out .result-icon { background: rgba(245,158,11,0.15); color: var(--amber); }
+.r-fake .result-icon{ background: rgba(239,68,68,0.15);  color: var(--red); }
+.r-wait .result-icon{ background: rgba(249,115,22,0.1);  color: var(--orange); }
+
+.result-title { font-family: var(--bebas); font-size: 22px; letter-spacing: 2px; line-height: 1; }
+.result-sub   { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; margin-top: 3px; opacity: 0.5; }
+.r-in   .result-title { color: var(--green); }
+.r-out  .result-title { color: var(--amber); }
+.r-fake .result-title { color: var(--red); }
+.r-wait .result-title { color: var(--orange); }
+
+.result-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);
+}
+.rg-label { font-family: var(--mono); font-size: 8px; color: var(--dim); letter-spacing: 2px; }
+.rg-val   { font-family: var(--oswald); font-size: 13px; margin-top: 3px; font-weight: 500; }
+
+.result-footer {
+  display: flex; gap: 16px; margin-top: 12px; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-family: var(--mono); font-size: 10px; color: var(--dim);
+}
+
+/* Tier badges */
+.tbadge {
+  display: inline-block; padding: 2px 9px; border-radius: 2px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 2px; font-weight: 600;
+}
+.tbadge-REG  { background: rgba(255,255,255,0.05); color: #888; border: 1px solid #333; }
+.tbadge-VIP  { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.tbadge-ULT  { background: rgba(249,115,22,0.12); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.tbadge-HOF  { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+/* ── DASHBOARD ── */
+.tier-overview-card {
+  border-radius: 5px; padding: 12px 16px;
+  border: 1px solid; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.to-label { font-family: var(--bebas); font-size: 20px; letter-spacing: 2px; }
+.to-sub   { font-family: var(--mono); font-size: 9px; color: var(--dim); margin-top: 2px; }
+.to-nums  { display: flex; gap: 18px; text-align: center; }
+.to-n     { font-family: var(--bebas); font-size: 24px; line-height: 1; }
+.to-nl    { font-family: var(--mono); font-size: 7px; letter-spacing: 1px; color: var(--dim); }
+
+.attendee-row {
+  border-radius: 5px; border: 1px solid var(--border);
+  background: var(--card); padding: 10px 14px; margin-bottom: 6px;
+}
+.ar-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.ar-code { font-family: var(--mono); font-size: 14px; letter-spacing: 3px; color: var(--white); }
+.ar-sub  { font-family: var(--mono); font-size: 9px; color: var(--dim); margin-top: 2px; }
+.ar-badges { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.status-in  { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); padding: 3px 9px; border-radius: 2px; font-family: var(--mono); font-size: 8px; letter-spacing: 1px; }
+.status-out { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); padding: 3px 9px; border-radius: 2px; font-family: var(--mono); font-size: 8px; letter-spacing: 1px; }
+.ar-footer  { display: flex; gap: 14px; margin-top: 8px; font-family: var(--mono); font-size: 9px; color: var(--dim); }
+
+.fake-row {
+  border-radius: 5px; border: 1px solid rgba(239,68,68,0.25);
+  background: rgba(20,5,5,0.8); padding: 10px 14px; margin-bottom: 6px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.fake-code  { font-family: var(--mono); font-size: 13px; color: var(--red); letter-spacing: 3px; }
+.fake-label { font-family: var(--mono); font-size: 8px; color: #6a2020; margin-top: 2px; letter-spacing: 1px; }
+.fake-count { font-family: var(--bebas); font-size: 28px; color: var(--red); line-height: 1; }
+
+/* ── LOG ITEMS ── */
+.log-item {
+  display: flex; gap: 10px; align-items: center;
+  padding: 9px 12px; border-radius: 5px; border: 1px solid;
+  margin-bottom: 6px;
+}
+.log-item.li-in   { border-color: rgba(34,197,94,0.1);  background: rgba(8,20,10,0.8); }
+.log-item.li-out  { border-color: rgba(245,158,11,0.1); background: rgba(20,14,4,0.8); }
+.log-item.li-fake { border-color: rgba(239,68,68,0.1);  background: rgba(20,4,4,0.8); }
+.log-icon {
+  width: 32px; height: 32px; border-radius: 3px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--bebas); font-size: 16px;
+}
+.li-in   .log-icon { background: rgba(34,197,94,0.12);  color: var(--green); }
+.li-out  .log-icon { background: rgba(245,158,11,0.12); color: var(--amber); }
+.li-fake .log-icon { background: rgba(239,68,68,0.12);  color: var(--red); }
+.log-body { flex: 1; min-width: 0; }
+.log-code { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; color: var(--white); }
+.log-meta { font-family: var(--mono); font-size: 8px; color: var(--dim); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
+.log-time { font-family: var(--mono); font-size: 9px; color: var(--dim); flex-shrink: 0; }
+
+/* ── EMPTY ── */
+.empty { text-align: center; padding: 48px 0; font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: #222; }
+
+/* ── SPINNER ── */
+.spinner { width: 16px; height: 16px; border: 2px solid rgba(249,115,22,0.2); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="flash"></div>
+<canvas id="cap-canvas" style="display:none"></canvas>
+
+<!-- ═══════════════════════════
+     HOME SCREEN
+════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <div class="hero-bg"></div>
+
+    <div class="home-content">
+      <!-- Top bar -->
+      <div class="home-topbar">
+        <div class="home-logo">EVENTSEC</div>
+        <div class="home-date">SAT · 06 JUNE · ABUJA</div>
+      </div>
+
+      <!-- Event name -->
+      <div class="home-event">
+        <div class="home-presents">LIFE OF KENNYZEECO PRESENTS</div>
+        <div class="home-title">
+          KENNY
+          <span>ZEECO</span>
+        </div>
+        <div class="home-subtitle">THE UPSTAGING</div>
+        <div class="home-venue">📍 MERIT HOUSE, MAITAMA</div>
+      </div>
+
+      <div class="home-divider"></div>
+
+      <!-- Copywriting -->
+      <div class="home-copy">
+        <div class="home-copy-headline">
+          EVERY TICKET.<br>
+          EVERY ENTRY.<br>
+          <span>ZERO FRAUD.</span>
+        </div>
+        <div class="home-copy-body">
+          Real-time ticket verification system for The Upstaging.
+          Snap the code, get instant confirmation.
+          Track every entry, exit and re-entry.
+          Fake tickets rejected on the spot.
+        </div>
+      </div>
+
+      <!-- Tier strip -->
+      <div class="tier-strip">
+        <div class="tier-chip reg">REGULAR · ₦7K</div>
+        <div class="tier-chip vip">VIP · ₦20K</div>
+        <div class="tier-chip ult">ULTIMATE TABLE · ₦500K</div>
+        <div class="tier-chip hof">HALL OF FAME · ₦1M</div>
+      </div>
+
+      <!-- CTA -->
+      <div class="home-cta">
+        <button class="btn-enter" onclick="enterApp()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ENTER SECURITY PORTAL
+          <span class="btn-enter-sub">AUTHORISED STAFF ONLY</span>
+        </button>
+
+        <div class="security-badge">
+          <div class="security-dot"></div>
+          <div class="security-text">
+            SYSTEM <strong>ONLINE</strong> · 171 TICKETS LOADED · OCR SCAN READY
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative figure (abstract) -->
+    <div class="hero-figure">
+      <div style="
+        position: absolute; right: 0; bottom: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(160deg, rgba(249,115,22,0.12) 0%, transparent 60%);
+        border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+      "></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     APP SCREEN
+════════════════════════════ -->
+<div class="screen" id="screen-app">
+
+  <!-- Header -->
+  <div class="app-header">
+    <div class="app-header-top">
+      <div class="app-brand">
+        <div class="app-brand-name">⬡ UPSTAGING SEC</div>
+        <div class="app-brand-event">KENNYZEECO · MERIT HOUSE · 06 JUNE</div>
+      </div>
+      <div class="app-stats">
+        <div class="app-stat s-inside">
+          <div class="app-stat-n" id="s-inside">0</div>
+          <div class="app-stat-l">INSIDE</div>
+        </div>
+        <div class="app-stat s-scanned">
+          <div class="app-stat-n" id="s-scanned">0</div>
+          <div class="app-stat-l">SCANNED</div>
+        </div>
+        <div class="app-stat s-fakes">
+          <div class="app-stat-n" id="s-fakes">0</div>
+          <div class="app-stat-l">FAKES</div>
+        </div>
+      </div>
+    </div>
+    <nav class="app-tabs">
+      <button class="app-tab active" onclick="showTab('scan')" id="tab-scan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+        SCAN
+      </button>
+      <button class="app-tab" onclick="showTab('dashboard')" id="tab-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        DASHBOARD
+      </button>
+      <button class="app-tab" onclick="showTab('logs')" id="tab-logs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+        ACTIVITY
+      </button>
+      <button class="app-tab" onclick="showHome()" style="flex:0;padding:9px 14px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Content -->
+  <div class="app-content">
+
+    <!-- SCAN PANE -->
+    <div class="pane active" id="pane-scan">
+
+      <div>
+        <div class="section-label" style="margin-bottom:8px">SELECT CHECKPOINT</div>
+        <div class="checkpoints" id="checkpoints"></div>
+      </div>
+
+      <div class="camera-box" id="cam-box">
+        <div class="cam-placeholder" id="cam-placeholder">
+          <div class="cam-icon-wrap">📷</div>
+          <div class="cam-hint">TAP OPEN CAMERA TO SCAN</div>
+        </div>
+        <video class="cam-video" id="cam-video" autoplay playsinline muted></video>
+        <img id="capture-img" alt="">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="scan-line" id="scan-line"></div>
+      </div>
+
+      <div class="btn-row" id="cam-btns">
+        <button class="btn btn-primary" id="btn-open" onclick="openCamera()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          OPEN CAMERA
+        </button>
+        <button class="btn btn-primary" id="btn-snap" onclick="snapPhoto()" style="display:none" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          SNAP & VERIFY
+        </button>
+        <button class="btn btn-outline" id="btn-stop" onclick="stopCamera()" style="display:none;flex:0;padding:12px 14px">✕</button>
+      </div>
+
+      <div>
+        <div class="input-label">OR ENTER CODE MANUALLY</div>
+        <div class="input-row">
+          <input type="text" id="manual-in" placeholder="A7K9X2P" maxlength="10"
+            oninput="this.value=this.value.toUpperCase()"
+            onkeydown="if(event.key==='Enter')doManual()">
+          <button class="btn btn-primary" onclick="doManual()" style="flex:0;padding:12px 16px;white-space:nowrap">
+            VERIFY
+          </button>
+        </div>
+      </div>
+
+      <div id="result-area"></div>
+
+    </div>
+
+    <!-- DASHBOARD PANE -->
+    <div class="pane" id="pane-dashboard">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="section-label">ATTENDEE STATUS</div>
+        <button class="btn btn-danger" onclick="clearAll()">🗑 CLEAR</button>
+      </div>
+      <div id="dash-content"><div class="empty">LOADING...</div></div>
+    </div>
+
+    <!-- LOGS PANE -->
+    <div class="pane" id="pane-logs">
+      <div class="section-label" id="log-label">ACTIVITY LOG</div>
+      <div id="logs-content"><div class="empty">LOADING...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────
+const API = window.location.origin;
+
+// ── TICKET TIERS ───────────────────────────────────────────────
+// Maps seat prefix to tier for display
+function getTier(seat) {
+  if (!seat) return 'REG';
+  if (seat.startsWith('HOF')) return 'HOF';
+  if (seat.startsWith('ULT')) return 'ULT';
+  if (seat.startsWith('VIP')) return 'VIP';
+  return 'REG';
+}
+const TIER_LABELS = { REG: 'REGULAR', VIP: 'VIP', ULT: 'ULTIMATE TABLE', HOF: 'HALL OF FAME' };
+
+// ── STATE ──────────────────────────────────────────────────────
+let checkpoint = 'Main Entrance';
+let camStream  = null;
+let busy       = false;
+const CHECKPOINTS = ['Main Entrance', 'VIP Gate', 'Ultimate Table', 'Hall of Fame', 'Backstage'];
+
+// ── INIT ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildCheckpoints();
+  refreshStats();
+  setInterval(refreshStats, 8000);
+});
+
+function buildCheckpoints() {
+  document.getElementById('checkpoints').innerHTML =
+    CHECKPOINTS.map(cp => `
+      <button class="cp-pill${cp === checkpoint ? ' active' : ''}"
+        onclick="setCP('${cp}')">${cp}</button>
+    `).join('');
+}
+function setCP(cp) { checkpoint = cp; buildCheckpoints(); }
+
+// ── SCREEN NAV ─────────────────────────────────────────────────
+function enterApp() {
+  document.getElementById('screen-home').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+}
+function showHome() {
+  stopCamera();
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-home').classList.add('active');
+}
+
+function showTab(name) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'dashboard') loadDash();
+  if (name === 'logs') loadLogs();
+}
+
+// ── CAMERA ─────────────────────────────────────────────────────
+async function openCamera() {
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 } }
+    });
+    const v = document.getElementById('cam-video');
+    v.srcObject = camStream; v.classList.add('active');
+    document.getElementById('cam-placeholder').classList.add('hidden');
+    document.getElementById('btn-open').style.display = 'none';
+    document.getElementById('btn-snap').style.display = 'flex';
+    document.getElementById('btn-stop').style.display = 'flex';
+    document.getElementById('scan-line').classList.add('active');
+    setTimeout(() => document.getElementById('btn-snap').disabled = false, 700);
+  } catch(e) {
+    alert('Camera error: ' + e.message);
+  }
+}
+
+function stopCamera() {
+  if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; }
+  const v = document.getElementById('cam-video');
+  v.classList.remove('active'); v.srcObject = null;
+  document.getElementById('cam-placeholder').classList.remove('hidden');
+  document.getElementById('btn-open').style.display = 'flex';
+  document.getElementById('btn-snap').style.display = 'none';
+  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('btn-snap').disabled = true;
+  document.getElementById('scan-line').classList.remove('active');
+  document.getElementById('capture-img').style.display = 'none';
+}
+
+async function snapPhoto() {
+  if (busy) return; busy = true;
+  const v = document.getElementById('cam-video');
+  const c = document.getElementById('cap-canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  const img = document.getElementById('capture-img');
+  img.src = c.toDataURL('image/jpeg'); img.style.display = 'block';
+  stopCamera();
+  showProcessing();
+  try {
+    const res = await fetch(`${API}/scan-image`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: c.toDataURL('image/jpeg', 0.92), checkpoint })
+    });
+    renderResult(await res.json());
+  } catch(e) {
+    showError('Cannot reach server. Is Flask running?');
+  }
+  refreshStats(); busy = false;
+}
+
+async function doManual() {
+  const inp = document.getElementById('manual-in');
+  const code = inp.value.trim().toUpperCase();
+  if (!code) return;
+  showProcessing();
+  try {
+    const res = await fetch(`${API}/verify`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, checkpoint })
+    });
+    renderResult(await res.json());
+  } catch(e) { showError('Cannot reach server.'); }
+  inp.value = ''; refreshStats();
+}
+
+// ── RESULT RENDERING ───────────────────────────────────────────
+function showProcessing() {
+  document.getElementById('result-area').innerHTML = `
+    <div class="result-card r-wait">
+      <div class="result-top">
+        <div class="result-icon"><div class="spinner"></div></div>
+        <div>
+          <div class="result-title">CHECKING...</div>
+          <div class="result-sub">VERIFYING AGAINST DATABASE</div>
+        </div>
+      </div>
+    </div>`;
+}
+function showError(msg) {
+  document.getElementById('result-area').innerHTML = `
+    <div class="result-card r-fake">
+      <div class="result-top">
+        <div class="result-icon">!</div>
+        <div><div class="result-title">ERROR</div><div class="result-sub">${msg}</div></div>
+      </div>
+    </div>`;
+}
+
+function flash(type) {
+  const el = document.getElementById('flash');
+  el.className = '';
+  void el.offsetWidth;
+  el.className = 'show-' + type;
+  setTimeout(() => el.className = '', 1400);
+}
+
+function renderResult(data) {
+  const area = document.getElementById('result-area');
+
+  if (data.status === 'UNREADABLE') {
+    area.innerHTML = `
+      <div class="result-card r-wait">
+        <div class="result-top">
+          <div class="result-icon">🔍</div>
+          <div>
+            <div class="result-title" style="color:#888">UNREADABLE</div>
+            <div class="result-sub">COULD NOT READ CODE — TRY AGAIN</div>
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px">${data.message||''}</div>
+      </div>`;
+    return;
+  }
+
+  if (data.status === 'FAKE') {
+    flash('red');
+    area.innerHTML = `
+      <div class="result-card r-fake">
+        <div class="result-top">
+          <div class="result-icon">✗</div>
+          <div>
+            <div class="result-title">FAKE TICKET</div>
+            <div class="result-sub">NOT IN SYSTEM — DENY ENTRY IMMEDIATELY</div>
+          </div>
+        </div>
+        <div style="background:rgba(239,68,68,0.07);padding:10px 14px;border-radius:3px;margin-top:4px;font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--red)">${data.code}</div>
+      </div>`;
+    return;
+  }
+
+  if (data.status === 'VALID') {
+    const isIn = data.direction === 'IN';
+    flash(isIn ? 'green' : 'amber');
+    const tier = getTier(data.meta?.seat);
+    const tierLabel = TIER_LABELS[tier] || 'REGULAR';
+    area.innerHTML = `
+      <div class="result-card ${isIn ? 'r-in' : 'r-out'}">
+        <div class="result-top">
+          <div class="result-icon">${isIn ? '→' : '←'}</div>
+          <div>
+            <div class="result-title">${isIn ? 'ENTRY GRANTED' : 'EXIT RECORDED'}</div>
+            <div class="result-sub">${isIn ? 'ADMIT TO VENUE' : 'EXITING VENUE'} · ${checkpoint.toUpperCase()}</div>
+          </div>
+        </div>
+        <div class="result-grid">
+          <div>
+            <div class="rg-label">TICKET CODE</div>
+            <div class="rg-val" style="color:var(--orange);letter-spacing:3px">${data.code}</div>
+          </div>
+          <div>
+            <div class="rg-label">TIER</div>
+            <div class="rg-val"><span class="tbadge tbadge-${tier}">${tierLabel}</span></div>
+          </div>
+          <div>
+            <div class="rg-label">SEAT REF</div>
+            <div class="rg-val">${data.meta?.seat || '—'}</div>
+          </div>
+          <div>
+            <div class="rg-label">STATUS</div>
+            <div class="rg-val" style="color:${isIn ? 'var(--green)' : 'var(--amber)'}">${isIn ? '● INSIDE' : '○ OUTSIDE'}</div>
+          </div>
+        </div>
+        <div class="result-footer">
+          <span style="color:var(--green)">↗ ${data.entries} entr${data.entries===1?'y':'ies'}</span>
+          <span style="color:var(--amber)">↙ ${data.exits} exit${data.exits===1?'':'s'}</span>
+          <span style="margin-left:auto">${data.entries+data.exits} total passes</span>
+        </div>
+      </div>`;
+  }
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────
+async function loadDash() {
+  const el = document.getElementById('dash-content');
+  try {
+    const data = await (await fetch(`${API}/dashboard`)).json();
+    if (!data.tickets?.length && !data.fakes?.length) {
+      el.innerHTML = '<div class="empty">NO TICKETS SCANNED YET</div>'; return;
+    }
+
+    // Tier colours
+    const TC = {
+      HOF: { border:'rgba(239,68,68,0.3)',   accent:'#f87171', bg:'rgba(25,5,5,0.5)'  },
+      ULT: { border:'rgba(249,115,22,0.3)',  accent:'var(--orange)', bg:'rgba(25,12,3,0.5)' },
+      VIP: { border:'rgba(251,191,36,0.3)',  accent:'var(--yellow)', bg:'rgba(25,20,3,0.5)' },
+      REG: { border:'rgba(255,255,255,0.1)', accent:'#aaa',   bg:'rgba(20,20,20,0.5)' },
+    };
+    const TL = { HOF:'HALL OF FAME', ULT:'ULTIMATE TABLE', VIP:'VIP', REG:'REGULAR' };
+
+    let html = '<div class="section-label" style="margin-bottom:10px">TIER OVERVIEW</div>';
+    ['HOF','ULT','VIP','REG'].forEach(tier => {
+      const tc = data.tickets.filter(t => getTier(t.meta?.seat) === tier);
+      if (!tc.length) return;
+      const inside = tc.filter(t => t.events?.length && t.events[t.events.length-1].type==='IN').length;
+      const c = TC[tier];
+      html += `<div class="tier-overview-card" style="border-color:${c.border};background:${c.bg}">
+        <div>
+          <div class="to-label" style="color:${c.accent}">${TL[tier]}</div>
+          <div class="to-sub">${tc.length} TICKETS</div>
+        </div>
+        <div class="to-nums">
+          <div><div class="to-n" style="color:${c.accent}">${inside}</div><div class="to-nl">INSIDE</div></div>
+          <div><div class="to-n">${tc.length}</div><div class="to-nl">TOTAL</div></div>
+        </div>
+      </div>`;
+    });
+
+    if (data.tickets.length) {
+      html += '<div class="section-label" style="margin:14px 0 8px">TICKET TRACKING</div>';
+      data.tickets.forEach(t => {
+        const last = t.events?.[t.events.length-1];
+        const isIn = last?.type === 'IN';
+        const entries = t.events?.filter(e=>e.type==='IN').length||0;
+        const exits   = t.events?.filter(e=>e.type==='OUT').length||0;
+        const tier = getTier(t.meta?.seat);
+        html += `<div class="attendee-row">
+          <div class="ar-top">
+            <div>
+              <div class="ar-code">${t.code}</div>
+              <div class="ar-sub">SEAT: ${t.meta?.seat||'—'}</div>
+            </div>
+            <div class="ar-badges">
+              <span class="tbadge tbadge-${tier}" style="font-size:7px">${TIER_LABELS[tier]||tier}</span>
+              <span class="${isIn?'status-in':'status-out'}">${isIn?'→ IN':'← OUT'}</span>
+            </div>
+          </div>
+          <div class="ar-footer">
+            <span style="color:var(--green)">↗ ${entries} entr${entries===1?'y':'ies'}</span>
+            <span style="color:var(--amber)">↙ ${exits} exit${exits===1?'':'s'}</span>
+            <span>${entries+exits} passes</span>
+          </div>
+        </div>`;
+      });
+    }
+
+    if (data.fakes?.length) {
+      html += '<div class="section-label" style="margin:14px 0 8px;color:var(--red)">⚠ FLAGGED / COUNTERFEIT</div>';
+      data.fakes.forEach(f => {
+        html += `<div class="fake-row">
+          <div><div class="fake-code">${f.code}</div><div class="fake-label">NOT IN SYSTEM · FLAGGED</div></div>
+          <div style="text-align:right"><div class="fake-count">${f.attempts}</div><div style="font-family:var(--mono);font-size:7px;color:#6a2020;letter-spacing:1px">ATTEMPT${f.attempts>1?'S':''}</div></div>
+        </div>`;
+      });
+    }
+
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<div class="empty">CANNOT REACH SERVER</div>';
+  }
+}
+
+// ── LOGS ───────────────────────────────────────────────────────
+async function loadLogs() {
+  const el = document.getElementById('logs-content');
+  try {
+    const data = await (await fetch(`${API}/logs`)).json();
+    document.getElementById('log-label').textContent = `ACTIVITY LOG · ${data.length} EVENTS`;
+    if (!data.length) { el.innerHTML = '<div class="empty">NO ACTIVITY YET</div>'; return; }
+    el.innerHTML = data.map(e => {
+      const t = new Date(e.time);
+      const ts = t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      const cls = e.type==='FAKE'?'li-fake':e.type==='IN'?'li-in':'li-out';
+      const ico = e.type==='FAKE'?'✗':e.type==='IN'?'→':'←';
+      const tier = getTier(e.meta?.seat);
+      return `<div class="log-item ${cls}">
+        <div class="log-icon">${ico}</div>
+        <div class="log-body">
+          <div class="log-code">${e.code}</div>
+          <div class="log-meta">
+            <span>${TIER_LABELS[tier]||tier}</span>
+            <span>@ ${e.checkpoint||'—'}</span>
+            ${e.meta?.seat?`<span>SEAT ${e.meta.seat}</span>`:''}
+          </div>
+        </div>
+        <div class="log-time">${ts}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty">CANNOT REACH SERVER</div>';
+  }
+}
+
+// ── STATS ──────────────────────────────────────────────────────
+async function refreshStats() {
+  try {
+    const d = await (await fetch(`${API}/stats`)).json();
+    document.getElementById('s-inside').textContent  = d.inside_now  || 0;
+    document.getElementById('s-scanned').textContent = d.total_scans || 0;
+    document.getElementById('s-fakes').textContent   = d.total_fakes || 0;
+  } catch {}
+}
+
+async function clearAll() {
+  if (!confirm('Clear ALL scan logs for The Upstaging? This cannot be undone.')) return;
+  try {
+    await fetch(`${API}/reset`, { method: 'POST' });
+    document.getElementById('result-area').innerHTML = '';
+    refreshStats(); loadDash();
+  } catch(e) { alert('Error'); }
+}
+</script>
+</body>
+</html>
