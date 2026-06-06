@@ -1,6 +1,7 @@
-flask 
-flask-cors 
-pytesseract 
-pillow 
-numpy 
+flask
+flask-cors
+pytesseract
+pillow
+opencv-python-headless
+numpy
 pyopenssl

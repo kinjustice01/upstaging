@@ -1,2 +1,5 @@
 [phases.setup]
-nixPkgs = ["tesseract"]
+nixPkgs = ["tesseract", "leptonica"]
+
+[phases.install]
+cmds = ["pip install flask flask-cors pytesseract pillow opencv-python-headless numpy pyopenssl"]
